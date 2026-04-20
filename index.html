@@ -60,7 +60,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 70px;
-      background: linear-gradient(to bottom, rgba(0,26,46,1) 0%, rgba(0,26,46,0.95) 100%);
+      background: linear-gradient(to bottom, rgba(0,68,105,1) 0%, rgba(0,68,105,0.95) 100%);
       border-bottom: 1px solid rgba(0,160,227,0.12);
       flex-shrink: 0;
       position: relative;
@@ -217,6 +217,14 @@
       display: block;
     }
 
+    /* karta 1 — chobotnice na průhledném pozadí */
+    .card-image.contain {
+      object-fit: contain;
+      object-position: center;
+      background: var(--navy);
+      padding: 10px;
+    }
+
     .card-image-wrap {
       position: relative;
       height: 220px;
@@ -330,7 +338,7 @@
 
     <div class="card" onclick="navigate('druh')">
       <div class="card-image-wrap">
-        <img class="card-image" src="images/index/karta_1.png" alt="Chobotnice pobřežní">
+        <img class="card-image contain" src="images/index/karta_1.png" alt="Chobotnice pobřežní">
       </div>
       <div class="card-body">
         <div class="card-tag" data-cs="DRUH" data-en="SPECIES">DRUH</div>
