@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Chobotnice pobřežní — ZOO Mořský svět Praha</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #00A0E3;
+      --navy:   #004469;
+      --deeper: #00325a;
+      --orange: #EF7F1A;
+      --bg:     #001a2e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      transform-origin: top left;
+      transform: scale(0.7115);
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      position: fixed;
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: white;
+    }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── RIPPLE ── */
+    .ripple {
+      position: fixed;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(0,160,227,0.35);
+      transform: translate(-50%,-50%) scale(0);
+      animation: ripple 0.6s ease-out forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    @keyframes ripple {
+      to { transform: translate(-50%,-50%) scale(18); opacity: 0; }
+    }
+
+    /* ── HEADER ── */
+    .header {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(0,160,227,0.12);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo img {
+      height: 110px;
+      display: block;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: white;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lang-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 8px 20px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+    .lang-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 780px 1fr;
+      overflow: hidden;
+    }
+
+    /* ── LEFT — HERO IMAGE ── */
+    .hero-col {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      display: block;
+      padding: 20px 0 0 0;
+    }
+
+    .hero-col::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, transparent 75%, var(--bg) 100%),
+        linear-gradient(to top, var(--bg) 0%, transparent 8%);
+      pointer-events: none;
+    }
+
+    /* ── RIGHT — SCROLLABLE CONTENT ── */
+    .content-col {
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 52px 80px 52px 60px;
+      cursor: grab;
+      user-select: none;
+    }
+    .content-col::-webkit-scrollbar { display: none; }
+    .content-col.grabbing { cursor: grabbing; }
+
+    /* ── ARTICLE HEADER ── */
+    .article-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .article-title {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.0;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #a8d8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .article-title-la {
+      font-size: 20px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 32px;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      gap: 0;
+      margin-bottom: 40px;
+      border: 1px solid rgba(0,160,227,0.2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 18px 24px;
+      border-right: 1px solid rgba(0,160,227,0.2);
+      background: rgba(0,68,105,0.3);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, rgba(0,160,227,0.3), transparent);
+      margin: 32px 0;
+    }
+
+    /* ── SECTION ── */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 14px;
+    }
+
+    .section-text {
+      font-size: 21px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 32px;
+    }
+
+    .section-text strong {
+      font-weight: 600;
+      color: white;
+    }
+
+    /* ── INLINE FOTO ── */
+    .inline-photo {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 8px 0 32px;
+      position: relative;
+    }
+
+    .inline-photo img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .inline-photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px 20px;
+      background: linear-gradient(to top, rgba(0,26,46,0.85), transparent);
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      font-style: italic;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight {
+      background: rgba(0,68,105,0.35);
+      border: 1px solid rgba(0,160,227,0.2);
+      border-left: 3px solid var(--orange);
+      border-radius: 0 10px 10px 0;
+      padding: 20px 24px;
+      margin: 8px 0 32px;
+      font-size: 21px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .highlight strong {
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .footer-left, .footer-right {
+      font-size: 14px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── SCROLL FADE ── */
+    .content-col-wrap {
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .content-col-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to top, var(--bg), transparent);
+      pointer-events: none;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="images/logo.png" alt="ZOO Mořský svět Praha">
+      </div>
+      <button class="back-btn" onclick="goHome()">← <span data-cs="Zpět" data-en="Back">Zpět</span></button>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('cs')">CS</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEVÝ SLOUPEC — foto -->
+    <div class="hero-col">
+      <img src="images/druh/Druh_hero.png" alt="Chobotnice pobřežní">
+    </div>
+
+    <!-- PRAVÝ SLOUPEC — obsah -->
+    <div class="content-col-wrap">
+      <div class="content-col" id="contentCol">
+
+        <div class="article-tag" data-cs="MĚKKÝŠI · HLAVONOŽCI" data-en="MOLLUSCS · CEPHALOPODS">MĚKKÝŠI · HLAVONOŽCI</div>
+        <div class="article-title" data-cs="Chobotnice pobřežní" data-en="Common Octopus">Chobotnice pobřežní</div>
+        <div class="article-title-la">Octopus vulgaris</div>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+          <div class="stat">
+            <div class="stat-value">8</div>
+            <div class="stat-label" data-cs="ramen" data-en="arms">ramen</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">1–2</div>
+            <div class="stat-label" data-cs="roky života" data-en="years lifespan">roky života</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">90 cm</div>
+            <div class="stat-label" data-cs="délka těla" data-en="body length">délka těla</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" style="color: #5bc0f8;">modrá</div>
+            <div class="stat-label" data-cs="barva krve" data-en="blood colour">barva krve</div>
+          </div>
+        </div>
+
+        <!-- SEKCE 1 -->
+        <div class="section-title" data-cs="KDE ŽIJE" data-en="HABITAT">KDE ŽIJE</div>
+        <p class="section-text" data-cs="Chobotnice pobřežní je kosmopolit — obývá pobřežní vody prakticky celého světa. Nalezneme ji ve Středozemním moři, u břehů Velké Británie, na Azorech i Kanárech, kolem celé Afriky, v Indonésii i v obou Amerikách. Preferuje skalnaté a kamenité dno s dostatkem úkrytů, kde si buduje doupě." data-en="The common octopus is a cosmopolitan species — it inhabits coastal waters of virtually every ocean. Found in the Mediterranean, off the coast of Britain, in the Azores and Canary Islands, along the entire African coast, in Indonesia and in both Americas. It prefers rocky and stony bottoms with plenty of hiding spots where it builds its den.">Chobotnice pobřežní je kosmopolit — obývá pobřežní vody prakticky celého světa. Nalezneme ji ve Středozemním moři, u břehů Velké Británie, na Azorech i Kanárech, kolem celé Afriky, v Indonésii i v obou Amerikách. Preferuje skalnaté a kamenité dno s dostatkem úkrytů, kde si buduje doupě.</p>
+
+        <div class="inline-photo">
+          <img src="images/druh/Druh1.jpg" alt="Chobotnice v přirozeném prostředí">
+          <div class="inline-photo-caption" data-cs="Chobotnice pobřežní na skalnatém dně" data-en="Common octopus on a rocky seabed">Chobotnice pobřežní na skalnatém dně</div>
+        </div>
+
+        <!-- SEKCE 2 -->
+        <div class="section-title" data-cs="JAK VYPADÁ" data-en="APPEARANCE">JAK VYPADÁ</div>
+        <p class="section-text" data-cs="Tělo tvoří měkký plášť a osm dlouhých ramen pokrytých přísavkami. Dospělá chobotnice dorůstá délky 30–90 cm, největší zaznamenaný jedinec měřil přes 4 metry. Hmotnost dospělce se pohybuje kolem 10–15 kg. Oči jsou velké a výkonné — dokážou rozlišit tvar, velikost, jas i orientaci objektů." data-en="The body consists of a soft mantle and eight long arms covered in suckers. An adult common octopus grows to 30–90 cm, with the largest recorded individual measuring over 4 metres. Adults typically weigh around 10–15 kg. The eyes are large and powerful — capable of distinguishing shape, size, brightness and object orientation.">Tělo tvoří měkký plášť a osm dlouhých ramen pokrytých přísavkami. Dospělá chobotnice dorůstá délky 30–90 cm, největší zaznamenaný jedinec měřil přes 4 metry. Hmotnost dospělce se pohybuje kolem 10–15 kg. Oči jsou velké a výkonné — dokážou rozlišit tvar, velikost, jas i orientaci objektů.</p>
+
+        <div class="inline-photo">
+          <img src="images/druh/Druh2.jpg" alt="Detail přísavek">
+          <div class="inline-photo-caption" data-cs="Detail přísavek — každá přísavka hmatá i ochutnává zároveň" data-en="Sucker detail — each sucker both touches and tastes simultaneously">Detail přísavek — každá přísavka hmatá i ochutnává zároveň</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- SEKCE 3 — MODRÁ KREV -->
+        <div class="section-title" data-cs="VĚDĚL JSI, ŽE..." data-en="DID YOU KNOW...">VĚDĚL JSI, ŽE...</div>
+        <div class="highlight">
+          <strong data-cs="Chobotnice má modrou krev." data-en="Octopuses have blue blood.">Chobotnice má modrou krev.</strong> <span data-cs="Namísto hemoglobinu s železem používá hemocyanin s mědí. V chladné vodě s nízkým obsahem kyslíku je tento systém přenosu kyslíku efektivnější než náš." data-en="Instead of iron-based haemoglobin, it uses copper-based haemocyanin. In cold, low-oxygen water this oxygen-transport system is actually more efficient than ours.">Namísto hemoglobinu s železem používá hemocyanin s mědí. V chladné vodě s nízkým obsahem kyslíku je tento systém přenosu kyslíku efektivnější než náš.</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- SEKCE 4 — ROZMNOŽOVÁNÍ -->
+        <div class="section-title" data-cs="KRÁTKÝ, INTENZIVNÍ ŽIVOT" data-en="SHORT, INTENSE LIFE">KRÁTKÝ, INTENZIVNÍ ŽIVOT</div>
+        <p class="section-text" data-cs="Chobotnice pobřežní žije jen 1–2 roky. Samec po páření umírá během několika měsíců. Samice přestane přijímat potravu a plně se věnuje potomkům — naklade 100 000 až 500 000 vajec a po celé tři měsíce inkubace je čistí a hlídá. S vylíhnutím posledního potomka umírá." data-en="The common octopus lives just 1–2 years. The male dies within months of mating. The female stops eating entirely and devotes herself completely to her offspring — she lays 100,000 to 500,000 eggs and guards and cleans them throughout the three-month incubation. She dies as the last egg hatches.">Chobotnice pobřežní žije jen 1–2 roky. Samec po páření umírá během několika měsíců. Samice přestane přijímat potravu a plně se věnuje potomkům — naklade 100 000 až 500 000 vajec a po celé tři měsíce inkubace je čistí a hlídá. S vylíhnutím posledního potomka umírá.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-left">ZOO Mořský svět · www.morskysvet.cz</span>
+    <span class="footer-right">© 2025 ZOO Mořský svět</span>
+  </footer>
+
+  <script>
+    let currentLang = 'cs';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+      document.querySelectorAll('[data-cs]').forEach(el => {
+        el.textContent = el.dataset[lang] || el.dataset.cs;
+      });
+    }
+
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    // Drag scroll
+    const col = document.getElementById('contentCol');
+    let isDragging = false, startY = 0, startScroll = 0;
+
+    col.addEventListener('mousedown', e => {
+      isDragging = true;
+      startY = e.clientY;
+      startScroll = col.scrollTop;
+      col.classList.add('grabbing');
+    });
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      col.scrollTop = startScroll - (e.clientY - startY);
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      col.classList.remove('grabbing');
+    });
+
+    col.addEventListener('touchstart', e => {
+      startY = e.touches[0].clientY;
+      startScroll = col.scrollTop;
+    }, { passive: true });
+    col.addEventListener('touchmove', e => {
+      col.scrollTop = startScroll - (e.touches[0].clientY - startY);
+    }, { passive: true });
+
+    // Ripple
+    document.addEventListener('click', function(e) {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    });
+
+    // Auto-reset
+    (function() {
+      var TIMEOUT = 180 * 1000;
+      var timer;
+      function reset() {
+        clearTimeout(timer);
+        timer = setTimeout(function() { window.location.href = 'index.html'; }, TIMEOUT);
+      }
+      ["mousemove","mousedown","touchstart","touchmove","keydown","scroll","click"].forEach(function(e) {
+        document.addEventListener(e, reset, { passive: true });
+      });
+      reset();
+    })();
+  </script>
+
+</body>
+</html>
