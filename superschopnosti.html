@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Superschopnosti — ZOO Mořský svět Praha</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #00A0E3;
+      --navy:   #004469;
+      --deeper: #00325a;
+      --orange: #EF7F1A;
+      --bg:     #001a2e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      transform-origin: top left;
+      transform: scale(0.7115);
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      position: fixed;
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: white;
+    }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── RIPPLE ── */
+    .ripple {
+      position: fixed;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(0,160,227,0.35);
+      transform: translate(-50%,-50%) scale(0);
+      animation: ripple 0.6s ease-out forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    @keyframes ripple {
+      to { transform: translate(-50%,-50%) scale(18); opacity: 0; }
+    }
+
+    /* ── HEADER ── */
+    .header {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(0,160,227,0.12);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo img { height: 110px; display: block; }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+    .lang-switch { display: flex; gap: 6px; }
+
+    .lang-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 8px 20px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active { background: var(--blue); border-color: var(--blue); color: white; }
+    .lang-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 780px 1fr;
+      overflow: hidden;
+    }
+
+    /* ── LEFT — HERO ── */
+    .hero-col {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .hero-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .hero-col::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, transparent 70%, var(--bg) 100%),
+        linear-gradient(to top, var(--bg) 0%, transparent 15%),
+        linear-gradient(to bottom, var(--bg) 0%, transparent 10%);
+      pointer-events: none;
+    }
+
+    /* ── RIGHT — SCROLLABLE CONTENT ── */
+    .content-col-wrap {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content-col {
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 52px 80px 80px 60px;
+      cursor: grab;
+      user-select: none;
+      -webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
+    }
+    .content-col::-webkit-scrollbar { display: none; }
+    .content-col.grabbing { cursor: grabbing; }
+
+    /* ── ARTICLE HEADER ── */
+    .article-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .article-title {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.0;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #ffffff 0%, #a8d8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, rgba(0,160,227,0.3), transparent);
+      margin: 36px 0;
+    }
+
+    /* ── SUPERPOWER SECTION ── */
+    .sp-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .sp-icon {
+      font-size: 26px;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,68,105,0.5);
+      border: 1px solid rgba(0,160,227,0.2);
+      border-radius: 14px;
+      flex-shrink: 0;
+    }
+
+    .sp-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .sp-text {
+      font-size: 21px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
+
+    .sp-text strong {
+      font-weight: 600;
+      color: white;
+    }
+
+    /* ── INLINE PHOTO ── */
+    .inline-photo {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 4px 0 24px;
+      position: relative;
+    }
+
+    .inline-photo img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .inline-photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 10px 18px;
+      background: linear-gradient(to top, rgba(0,26,46,0.85), transparent);
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+
+    /* ── FOTO ROW (3 fotky vedle sebe) ── */
+    .photo-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 4px 0 24px;
+    }
+
+    .photo-row-item {
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-row-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .photo-row-item .inline-photo-caption {
+      font-size: 12px;
+    }
+
+    /* ── VIDEO WRAP ── */
+    .video-wrap {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 4px 0 24px;
+      background: #000;
+    }
+
+    .video-wrap video {
+      width: 100%;
+      display: block;
+      max-height: 380px;
+      object-fit: cover;
+    }
+
+    .video-wrap.small video {
+      max-height: 220px;
+    }
+
+    .video-wrap.vertical video {
+      max-height: 460px;
+      object-fit: contain;
+    }
+
+    /* Fullscreen tlačítko */
+    .video-btn {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 10px 20px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s;
+      user-select: none;
+    }
+    .video-btn:hover { background: rgba(0,0,0,0.75); }
+    .video-btn:active { transform: scale(0.97); }
+
+    /* ── FULLSCREEN OVERLAY ── */
+    .fs-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .fs-overlay.active { display: flex; }
+
+    .fs-overlay video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .fs-close-btn {
+      position: absolute;
+      bottom: 40px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 14px 28px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .fs-close-btn:hover { background: rgba(0,0,0,0.8); }
+
+    /* ── FOOTER ── */
+    .footer {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .footer-left, .footer-right {
+      font-size: 14px;
+      color: rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FULLSCREEN OVERLAY -->
+  <div class="fs-overlay" id="fsOverlay">
+    <video id="fsVideo" autoplay muted loop playsinline></video>
+    <button class="fs-close-btn" onclick="closeFullscreen()">✕ <span data-cs="ZAVŘÍT" data-en="CLOSE">ZAVŘÍT</span></button>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="images/logo.png" alt="ZOO Mořský svět Praha">
+      </div>
+      <button class="back-btn" onclick="goHome()">← <span data-cs="Zpět" data-en="Back">Zpět</span></button>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('cs')">CS</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEVÝ SLOUPEC — oko -->
+    <div class="hero-col">
+      <img src="images/ss/ss-hero.jpg" alt="Oko chobotnice">
+    </div>
+
+    <!-- PRAVÝ SLOUPEC -->
+    <div class="content-col-wrap">
+      <div class="content-col" id="contentCol">
+
+        <div class="article-tag" data-cs="CHOVÁNÍ · BIOLOGIE" data-en="BEHAVIOUR · BIOLOGY">CHOVÁNÍ · BIOLOGIE</div>
+        <div class="article-title" data-cs="Superschopnosti" data-en="Superpowers">Superschopnosti</div>
+
+        <!-- 1. INTELIGENCE -->
+        <div class="sp-header">
+          <div class="sp-icon">🧠</div>
+          <div class="sp-title" data-cs="Inteligence" data-en="Intelligence">Inteligence</div>
+        </div>
+        <p class="sp-text" data-cs="Chobotnice jsou nejinteligentnější bezobratlí na planetě. Řeší bludiště a hlavolamy, zapamatují si řešení a příště postupují efektivněji. Odšroubují uzávěr sklenice, aby se dostaly k odměně. Staví si úkryty — po návratu z lovu zatarasí vchod do doupěte kameny. Byly zaznamenány případy, kdy se chobotnice vzdala jídla výměnou za hračku." data-en="Octopuses are the most intelligent invertebrates on the planet. They solve mazes and puzzles, remember solutions and improve each time. They unscrew jar lids to reach a reward. They build shelters — blocking the entrance to their den with stones after returning from a hunt. Cases have been recorded of octopuses trading food for a toy.">Chobotnice jsou nejinteligentnější bezobratlí na planetě. Řeší bludiště a hlavolamy, zapamatují si řešení a příště postupují efektivněji. Odšroubují uzávěr sklenice, aby se dostaly k odměně. Staví si úkryty — po návratu z lovu zatarasí vchod do doupěte kameny. Byly zaznamenány případy, kdy se chobotnice vzdala jídla výměnou za hračku.</p>
+        <p class="sp-text" data-cs="Mozek chobotnice je největší ze všech bezobratlých. Jejich inteligence přitom vznikla zcela nezávisle na naší — evoluční cesty chobotnic a savců se rozdělily před více než miliardou let." data-en="The octopus brain is the largest of all invertebrates. Yet their intelligence evolved completely independently of ours — the evolutionary paths of octopuses and mammals diverged over a billion years ago.">Mozek chobotnice je největší ze všech bezobratlých. Jejich inteligence přitom vznikla zcela nezávisle na naší — evoluční cesty chobotnic a savců se rozdělily před více než miliardou let.</p>
+
+        <div class="divider"></div>
+
+        <!-- 2. RAMENA -->
+        <div class="sp-header">
+          <div class="sp-icon">🦾</div>
+          <div class="sp-title" data-cs="Ramena" data-en="Arms">Ramena</div>
+        </div>
+        <p class="sp-text" data-cs="Dvě třetiny všech neuronů chobotnice se nenachází v mozku, ale v ramenech. Každé rameno má částečnou vlastní inteligenci a dokáže reagovat nezávisle na zbytku těla. Přísavky jsou vybaveny dotykovými i chemickými receptory — chobotnice jimi současně hmatá i &quot;ochutnává&quot; vše, čeho se dotýká." data-en="Two thirds of all the octopus's neurons are located not in the brain but in the arms. Each arm has a degree of its own intelligence and can react independently. Suckers are equipped with both touch and chemical receptors — the octopus simultaneously feels and &quot;tastes&quot; everything it touches.">Dvě třetiny všech neuronů chobotnice se nenachází v mozku, ale v ramenech. Každé rameno má částečnou vlastní inteligenci a dokáže reagovat nezávisle na zbytku těla. Přísavky jsou vybaveny dotykovými i chemickými receptory — chobotnice jimi současně hmatá i "ochutnává" vše, čeho se dotýká.</p>
+
+        <div class="inline-photo">
+          <img src="images/ss/ss1.jpg" alt="Přísavky chobotnice">
+          <div class="inline-photo-caption" data-cs="Každá přísavka hmatá i ochutnává zároveň" data-en="Each sucker both touches and tastes simultaneously">Každá přísavka hmatá i ochutnává zároveň</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 3. OKO -->
+        <div class="sp-header">
+          <div class="sp-icon">👁️</div>
+          <div class="sp-title" data-cs="Oko" data-en="Eye">Oko</div>
+        </div>
+        <p class="sp-text" data-cs="Oko chobotnice je na pohled nápadně podobné lidskému. Ale uvnitř funguje jinak — a lépe. Lidské oko má slepou skvrnu, místo kde optický nerv prochází sítnicí a kde nic nevidíme. Chobotnice tuto &quot;chybu&quot; nemá. Fotoreceptory jsou orientovány ke světlu, nervy vedou za sítnici — žádné přerušení, žádná slepá skvrna." data-en="The octopus eye looks strikingly similar to the human eye. But it works differently — and better. The human eye has a blind spot where the optic nerve passes through the retina and we see nothing. The octopus has no such flaw. Its photoreceptors face toward the light, nerves run behind the retina — no interruption, no blind spot.">Oko chobotnice je na pohled nápadně podobné lidskému. Ale uvnitř funguje jinak — a lépe. Lidské oko má slepou skvrnu, místo kde optický nerv prochází sítnicí a kde nic nevidíme. Chobotnice tuto "chybu" nemá. Fotoreceptory jsou orientovány ke světlu, nervy vedou za sítnici — žádné přerušení, žádná slepá skvrna.</p>
+        <p class="sp-text" data-cs="Paradox: chobotnice pravděpodobně nevidí barvy — má jen jeden typ fotoreceptorů. Přesto dokáže dokonale napodobovat barevné vzory prostředí. Jak? Vědci se domnívají, že může vnímat barvu přes kůži, nebo využívá tvar zornice jako spektrální filtr. Záhada zatím není rozluštěna." data-en="A paradox: the octopus probably cannot see colour — it has only one type of photoreceptor. Yet it can perfectly replicate the colour patterns of its surroundings. How? Scientists believe it may perceive colour through its skin, or use the shape of its pupil as a spectral filter. The mystery remains unsolved.">Paradox: chobotnice pravděpodobně nevidí barvy — má jen jeden typ fotoreceptorů. Přesto dokáže dokonale napodobovat barevné vzory prostředí. Jak? Vědci se domnívají, že může vnímat barvu přes kůži, nebo využívá tvar zornice jako spektrální filtr. Záhada zatím není rozluštěna.</p>
+
+        <div class="inline-photo">
+          <img src="images/ss/ss2.jpg" alt="Detail oka chobotnice">
+          <div class="inline-photo-caption" data-cs="Zornice chobotnice je vždy horizontální — i když se tělo otočí" data-en="The octopus pupil always stays horizontal — even when the body rotates">Zornice chobotnice je vždy horizontální — i když se tělo otočí</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 4. BARVOMĚNA -->
+        <div class="sp-header">
+          <div class="sp-icon">🎨</div>
+          <div class="sp-title" data-cs="Barvoměna" data-en="Colour Change">Barvoměna</div>
+        </div>
+        <p class="sp-text" data-cs="Buňky na povrchu kůže — chromatofory — obsahují váčky s pigmenty. Chobotnice je dokáže roztáhnout nebo stáhnout během zlomků sekundy a okamžitě změnit barvu i vzor celého těla. Kůže ale nemění jen barvu — mění i texturu. Hladká kůže se proměnění v hrbolatý povrch napodobující kámen, korál nebo mořské dno." data-en="Skin cells called chromatophores contain pigment sacs. The octopus can expand or contract them in fractions of a second, instantly changing the colour and pattern across its entire body. But the skin changes more than colour — it changes texture too. Smooth skin transforms into a bumpy surface mimicking rock, coral or the seabed.">Buňky na povrchu kůže — chromatofory — obsahují váčky s pigmenty. Chobotnice je dokáže roztáhnout nebo stáhnout během zlomků sekundy a okamžitě změnit barvu i vzor celého těla. Kůže ale nemění jen barvu — mění i texturu. Hladká kůže se proměnění v hrbolatý povrch napodobující kámen, korál nebo mořské dno.</p>
+
+        <!-- Video chromatofory — inline, bez fullscreen -->
+        <div class="video-wrap small">
+          <video autoplay muted loop playsinline>
+            <source src="videos/ss-video1.mp4" type="video/mp4">
+          </video>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 5. MIMIKRY -->
+        <div class="sp-header">
+          <div class="sp-icon">🐍</div>
+          <div class="sp-title" data-cs="Mimikry" data-en="Mimicry">Mimikry</div>
+        </div>
+        <p class="sp-text" data-cs="Barvoměna jde ještě dál. Chobotnice dokáže aktivně napodobit konkrétní živočichy — mění tvar těla, pohyb i zbarvení tak, aby připomínala nebezpečné druhy. Byly zaznamenány napodobeniny mořského hada, perutýna nebo platýse. Tato schopnost se nazývá batesovské mimikry — chobotnice hraje roli nebezpečného živočicha, aby mohla bezpečně přeplacat přes ohrožené území." data-en="Colour change goes even further. The octopus can actively impersonate specific animals — changing body shape, movement and colouration to resemble dangerous species. Documented impersonations include the sea snake, lionfish and flatfish. This is called Batesian mimicry — the octopus plays the role of a dangerous animal to safely cross threatening territory.">Barvoměna jde ještě dál. Chobotnice dokáže aktivně napodobit konkrétní živočichy — mění tvar těla, pohyb i zbarvení tak, aby připomínala nebezpečné druhy. Byly zaznamenány napodobeniny mořského hada, perutýna nebo platýse. Tato schopnost se nazývá batesovské mimikry — chobotnice hraje roli nebezpečného živočicha, aby mohla bezpečně přeplacat přes ohrožené území.</p>
+
+        <div class="divider"></div>
+
+        <!-- 6. MIMEZE -->
+        <div class="sp-header">
+          <div class="sp-icon">👻</div>
+          <div class="sp-title" data-cs="Mimeze" data-en="Camouflage">Mimeze</div>
+        </div>
+        <p class="sp-text" data-cs="Zatímco mimikry je aktivní představení, mimeze je dokonalé splynutí. Chobotnice se přizpůsobí konkrétnímu povrchu — kameni, korálu, řase — a doslova zmizí. Kombinace barvy, vzoru a textury kůže vytváří kamufláž, kterou je téměř nemožné odhalit." data-en="While mimicry is an active performance, camouflage is perfect fusion. The octopus adapts to a specific surface — rock, coral, seaweed — and literally disappears. The combination of colour, pattern and skin texture creates a disguise that is almost impossible to detect.">Zatímco mimikry je aktivní představení, mimeze je dokonalé splynutí. Chobotnice se přizpůsobí konkrétnímu povrchu — kameni, korálu, řase — a doslova zmizí. Kombinace barvy, vzoru a textury kůže vytváří kamufláž, kterou je téměř nemožné odhalit.</p>
+
+        <!-- Video mimeze — inline + fullscreen -->
+        <div class="video-wrap vertical">
+          <video autoplay muted loop playsinline>
+            <source src="videos/ss-video2.mp4" type="video/mp4">
+          </video>
+          <button class="video-btn" onclick="openFullscreen('videos/ss-video2.mp4')">
+            ⛶ <span data-cs="CELÁ OBRAZOVKA" data-en="FULL SCREEN">CELÁ OBRAZOVKA</span>
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 7. LOV -->
+        <div class="sp-header">
+          <div class="sp-icon">☠️</div>
+          <div class="sp-title" data-cs="Lov a zpracování potravy" data-en="Hunting and Feeding">Lov a zpracování potravy</div>
+        </div>
+        <p class="sp-text" data-cs="Chobotnice je vybavena třemi smrtícími nástroji. Silný zobák roztrhá i tvrdý krunýř kraba. Jazyk — radula — je posetý výběžky jako rašple a odstraní maso z kosti. Ve slinných žlázách se tvoří paralyzující toxin." data-en="The octopus is equipped with three deadly tools. A powerful beak can crack even the hard shell of a crab. The tongue — the radula — is covered in rasping teeth and strips meat from bone. The salivary glands produce a paralysing toxin.">Chobotnice je vybavena třemi smrtícími nástroji. Silný zobák roztrhá i tvrdý krunýř kraba. Jazyk — radula — je posetý výběžky jako rašple a odstraní maso z kosti. Ve slinných žlázách se tvoří paralyzující toxin.</p>
+        <p class="sp-text" data-cs="Do mušlí chobotnice nevstupuje silou — vyvrtá přesný otvor v místě svalu, který mušli drží zavřenou, vstříkne jed a mušle se sama otevře. A to není vše: chobotnice byly zaznamenány jak &quot;organizují&quot; kanice — naháněly je tak, aby tito pro ně vyplašili kořist z úkrytů. Spolupráce různých druhů při lovu je u bezobratlých zcela výjimečná." data-en="The octopus does not force open shells — it drills a precise hole at the exact location of the muscle holding the shell closed, injects venom, and the shell opens by itself. And that is not all: octopuses have been observed &quot;coordinating&quot; grouper fish — herding them to flush prey from hiding spots. Cross-species cooperation in hunting is virtually unheard of among invertebrates.">Do mušlí chobotnice nevstupuje silou — vyvrtá přesný otvor v místě svalu, který mušli drží zavřenou, vstříkne jed a mušle se sama otevře. A to není vše: chobotnice byly zaznamenány jak "organizují" kanice — naháněly je tak, aby tito pro ně vyplašili kořist z úkrytů. Spolupráce různých druhů při lovu je u bezobratlých zcela výjimečná.</p>
+
+        <!-- 3 fotky lovu -->
+        <div class="photo-row">
+          <div class="photo-row-item">
+            <img src="images/ss/ss-lov1.jpg" alt="Díra vyvrtaná v mušli">
+            <div class="inline-photo-caption" data-cs="Díra přesně v místě svalu" data-en="Hole drilled at the muscle attachment">Díra přesně v místě svalu</div>
+          </div>
+          <div class="photo-row-item">
+            <img src="images/ss/ss-lov2.jpg" alt="Krabí klepeta">
+            <div class="inline-photo-caption" data-cs="Zbytky po krabí hostině" data-en="Remains after a crab feast">Zbytky po krabí hostině</div>
+          </div>
+          <div class="photo-row-item">
+            <img src="images/ss/ss-lov3.gif" alt="Díra v ulitě">
+            <div class="inline-photo-caption" data-cs="Otvor vyvrtaný do ulity" data-en="Borehole drilled into a shell">Otvor vyvrtaný do ulity</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 8. MĚKKÉ TĚLO -->
+        <div class="sp-header">
+          <div class="sp-icon">🫥</div>
+          <div class="sp-title" data-cs="Měkké tělo" data-en="Soft Body">Měkké tělo</div>
+        </div>
+        <p class="sp-text" data-cs="Chobotnice nemá kosti ani pevnou schránku. Jediná pevná část těla je zobák. To znamená, že se dokáže protlačit jakoukoli mezerou, která je větší než tento zobák — štěrbinou ve skále, trubkou, sítí. Tato schopnost z ní dělá lovce, který se dostane prakticky kamkoliv." data-en="The octopus has no bones or hard shell. The only hard part of its body is the beak. This means it can squeeze through any gap larger than that beak — a crack in a rock, a pipe, a net. This ability makes it a hunter that can reach virtually anywhere.">Chobotnice nemá kosti ani pevnou schránku. Jediná pevná část těla je zobák. To znamená, že se dokáže protlačit jakoukoli mezerou, která je větší než tento zobák — štěrbinou ve skále, trubkou, sítí. Tato schopnost z ní dělá lovce, který se dostane prakticky kamkoliv.</p>
+
+        <!-- Video měkké tělo + úniky — inline + fullscreen -->
+        <div class="video-wrap vertical">
+          <video autoplay muted loop playsinline>
+            <source src="videos/ss-video3.mp4" type="video/mp4">
+          </video>
+          <button class="video-btn" onclick="openFullscreen('videos/ss-video3.mp4')">
+            ⛶ <span data-cs="CELÁ OBRAZOVKA" data-en="FULL SCREEN">CELÁ OBRAZOVKA</span>
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 9. ÚNIKY Z AKVÁRIA -->
+        <div class="sp-header">
+          <div class="sp-icon">🚪</div>
+          <div class="sp-title" data-cs="Úniky z akvária" data-en="Aquarium Escapes">Úniky z akvária</div>
+        </div>
+        <p class="sp-text" data-cs="Chovatelé dobře vědí: akvárium s chobotnicí musí být dokonale uzavřené. Chobotnice otevírají víka, rozeberou filtrační systémy, ucpávají odtokové kanálky. Vylézají z nádrže, cestují po souši a byly zaznamenány případy, kdy chobotnice navštívila vedlejší akvárium — a vyjedla ho." data-en="Aquarium keepers know it well: a tank housing an octopus must be perfectly sealed. Octopuses open lids, dismantle filtration systems, block drainage channels. They climb out of tanks, travel across dry land, and cases have been recorded of an octopus visiting a neighbouring tank — and eating its inhabitants.">Chovatelé dobře vědí: akvárium s chobotnicí musí být dokonale uzavřené. Chobotnice otevírají víka, rozeberou filtrační systémy, ucpávají odtokové kanálky. Vylézají z nádrže, cestují po souši a byly zaznamenány případy, kdy chobotnice navštívila vedlejší akvárium — a vyjedla ho.</p>
+        <p class="sp-text" data-cs="Jedna chobotnice v novozélandském akváriu pravidelně v noci opouštěla nádrž, přelezla na druhou stranu místnosti, snědla ryby a vrátila se zpět. Personál přišel na to až po několika týdnech." data-en="One octopus at a New Zealand aquarium regularly left its tank at night, crossed the room, ate the fish in another tank, and returned. Staff only discovered what was happening after several weeks.">Jedna chobotnice v novozélandském akváriu pravidelně v noci opouštěla nádrž, přelezla na druhou stranu místnosti, snědla ryby a vrátila se zpět. Personál přišel na to až po několika týdnech.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-left">ZOO Mořský svět · www.morskysvet.cz</span>
+    <span class="footer-right">© 2025 ZOO Mořský svět</span>
+  </footer>
+
+  <script>
+    let currentLang = 'cs';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+      document.querySelectorAll('[data-cs]').forEach(el => {
+        el.textContent = el.dataset[lang] || el.dataset.cs;
+      });
+    }
+
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    // Fullscreen
+    function openFullscreen(src) {
+      const overlay = document.getElementById('fsOverlay');
+      const fsVideo = document.getElementById('fsVideo');
+      fsVideo.src = src;
+      fsVideo.play();
+      overlay.classList.add('active');
+    }
+
+    function closeFullscreen() {
+      const overlay = document.getElementById('fsOverlay');
+      const fsVideo = document.getElementById('fsVideo');
+      overlay.classList.remove('active');
+      fsVideo.pause();
+      fsVideo.src = '';
+    }
+
+    // Scroll
+    const col = document.getElementById('contentCol');
+    let isDragging = false, startY = 0, startScroll = 0;
+
+    col.addEventListener('mousedown', e => {
+      isDragging = true;
+      startY = e.clientY;
+      startScroll = col.scrollTop;
+      col.classList.add('grabbing');
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      col.scrollTop = startScroll - (e.clientY - startY);
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      col.classList.remove('grabbing');
+    });
+
+    col.addEventListener('wheel', e => {
+      col.scrollTop += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
+
+    col.addEventListener('touchstart', e => {
+      startY = e.touches[0].clientY;
+      startScroll = col.scrollTop;
+    }, { passive: true });
+    col.addEventListener('touchmove', e => {
+      col.scrollTop = startScroll - (e.touches[0].clientY - startY);
+    }, { passive: true });
+
+    // Ripple
+    document.addEventListener('click', function(e) {
+      if (document.getElementById('fsOverlay').classList.contains('active')) return;
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    });
+
+    // Auto-reset
+    (function() {
+      var TIMEOUT = 180 * 1000;
+      var timer;
+      function reset() {
+        clearTimeout(timer);
+        timer = setTimeout(function() { window.location.href = 'index.html'; }, TIMEOUT);
+      }
+      ["mousemove","mousedown","touchstart","touchmove","keydown","scroll","click"].forEach(function(e) {
+        document.addEventListener(e, reset, { passive: true });
+      });
+      reset();
+    })();
+  </script>
+
+</body>
+</html>
