@@ -158,8 +158,6 @@
       padding: 52px 80px 80px 60px;
       cursor: grab;
       user-select: none;
-      -webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
-      mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
     }
     .content-col::-webkit-scrollbar { display: none; }
     .content-col.grabbing { cursor: grabbing; }
@@ -481,7 +479,7 @@
 
         <!-- Video chromatofory — inline, bez fullscreen -->
         <div class="video-wrap small">
-          <video autoplay muted loop playsinline>
+          <video autoplay muted loop playsinline preload="none">
             <source src="videos/ss-video1.mp4" type="video/mp4">
           </video>
         </div>
@@ -506,7 +504,7 @@
 
         <!-- Video mimeze — inline + fullscreen -->
         <div class="video-wrap vertical">
-          <video autoplay muted loop playsinline>
+          <video autoplay muted loop playsinline preload="none">
             <source src="videos/ss-video2.mp4" type="video/mp4">
           </video>
           <button class="video-btn" onclick="openFullscreen('videos/ss-video2.mp4')">
@@ -551,7 +549,7 @@
 
         <!-- Video měkké tělo + úniky — inline + fullscreen -->
         <div class="video-wrap vertical">
-          <video autoplay muted loop playsinline>
+          <video autoplay muted loop playsinline preload="none">
             <source src="videos/ss-video3.mp4" type="video/mp4">
           </video>
           <button class="video-btn" onclick="openFullscreen('videos/ss-video3.mp4')">
