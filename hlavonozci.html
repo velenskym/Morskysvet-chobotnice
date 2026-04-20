@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Hlavonožci — ZOO Mořský svět Praha</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #00A0E3;
+      --navy:   #004469;
+      --deeper: #00325a;
+      --orange: #EF7F1A;
+      --bg:     #001a2e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      transform-origin: top left;
+      transform: scale(0.7115);
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      position: fixed;
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: white;
+    }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── RIPPLE ── */
+    .ripple {
+      position: fixed;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(0,160,227,0.35);
+      transform: translate(-50%,-50%) scale(0);
+      animation: ripple 0.6s ease-out forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    @keyframes ripple {
+      to { transform: translate(-50%,-50%) scale(18); opacity: 0; }
+    }
+
+    /* ── HEADER ── */
+    .header {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(0,160,227,0.12);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo img { height: 110px; display: block; }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+    .lang-switch { display: flex; gap: 6px; }
+
+    .lang-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 8px 20px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active { background: var(--blue); border-color: var(--blue); color: white; }
+    .lang-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 780px 1fr;
+      overflow: hidden;
+    }
+
+    /* ── LEFT — HERO ── */
+    .hero-col {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .hero-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .hero-col::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, transparent 70%, var(--bg) 100%),
+        linear-gradient(to top, var(--bg) 0%, transparent 15%),
+        linear-gradient(to bottom, var(--bg) 0%, transparent 10%);
+      pointer-events: none;
+    }
+
+    /* ── RIGHT — SCROLLABLE CONTENT ── */
+    .content-col-wrap {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content-col {
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding: 52px 80px 80px 60px;
+      cursor: grab;
+      user-select: none;
+      -webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
+    }
+    .content-col::-webkit-scrollbar { display: none; }
+    .content-col.grabbing { cursor: grabbing; }
+
+    /* ── ARTICLE HEADER ── */
+    .article-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .article-title {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.0;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #a8d8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .article-perex {
+      font-size: 23px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      gap: 0;
+      margin-bottom: 40px;
+      border: 1px solid rgba(0,160,227,0.2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 18px 24px;
+      border-right: 1px solid rgba(0,160,227,0.2);
+      background: rgba(0,68,105,0.3);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, rgba(0,160,227,0.3), transparent);
+      margin: 36px 0;
+    }
+
+    /* ── SECTION ── */
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .section-text {
+      font-size: 21px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 28px;
+    }
+
+    .section-text strong {
+      font-weight: 600;
+      color: white;
+    }
+
+    /* ── INLINE PHOTO ── */
+    .inline-photo {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 4px 0 28px;
+      position: relative;
+    }
+
+    .inline-photo img {
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .inline-photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px 20px;
+      background: linear-gradient(to top, rgba(0,26,46,0.85), transparent);
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      font-style: italic;
+    }
+
+    /* ── SPECIES NAME TAG ── */
+    .species-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,68,105,0.4);
+      border: 1px solid rgba(0,160,227,0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      margin-bottom: 16px;
+    }
+
+    .species-cs {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .species-la {
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .footer-left, .footer-right {
+      font-size: 14px;
+      color: rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="images/logo.png" alt="ZOO Mořský svět Praha">
+      </div>
+      <button class="back-btn" onclick="goHome()">← <span data-cs="Zpět" data-en="Back">Zpět</span></button>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('cs')">CS</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEVÝ SLOUPEC — nautilus -->
+    <div class="hero-col">
+      <img src="images/hlavonozci/hl1.jpg" alt="Nautilus">
+    </div>
+
+    <!-- PRAVÝ SLOUPEC -->
+    <div class="content-col-wrap">
+      <div class="content-col" id="contentCol">
+
+        <div class="article-tag" data-cs="EVOLUCE · SYSTEMATIKA" data-en="EVOLUTION · SYSTEMATICS">EVOLUCE · SYSTEMATIKA</div>
+        <div class="article-title" data-cs="Hlavonožci" data-en="Cephalopods">Hlavonožci</div>
+        <div class="article-perex" data-cs="Před 500 miliony let se skupina měkkýšů vydala jinou cestou. Vzdali se ulity — a získali mozek." data-en="500 million years ago, a group of molluscs took a different path. They gave up their shell — and gained a brain.">Před 500 miliony let se skupina měkkýšů vydala jinou cestou. Vzdali se ulity — a získali mozek.</div>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+          <div class="stat">
+            <div class="stat-value">500 mil.</div>
+            <div class="stat-label" data-cs="let evoluce" data-en="years of evolution">let evoluce</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">~800</div>
+            <div class="stat-label" data-cs="druhů dnes" data-en="species today">druhů dnes</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">3</div>
+            <div class="stat-label" data-cs="hlavní skupiny" data-en="main groups">hlavní skupiny</div>
+          </div>
+        </div>
+
+        <!-- PŮVOD -->
+        <div class="section-title" data-cs="PŮVOD" data-en="ORIGINS">PŮVOD</div>
+        <p class="section-text" data-cs="Hlavonožci jsou třída měkkýšů — příbuzní hlemýžďů a mlžů. Jejich předci nosili ulitu jako ochrannou schránku. Před přibližně 500 miliony let začala část z nich ulitu redukovat nebo zcela opouštět. Výměnou získali pohyblivost, rychlost a postupně i složitý nervový systém. Dnes jsou hlavonožci nejinteligentnějšími bezobratlými na Zemi." data-en="Cephalopods are a class of molluscs — relatives of snails and clams. Their ancestors carried a shell as a protective casing. Around 500 million years ago, some began to reduce or abandon the shell entirely. In return they gained mobility, speed, and gradually a complex nervous system. Today cephalopods are the most intelligent invertebrates on Earth.">Hlavonožci jsou třída měkkýšů — příbuzní hlemýžďů a mlžů. Jejich předci nosili ulitu jako ochrannou schránku. Před přibližně 500 miliony let začala část z nich ulitu redukovat nebo zcela opouštět. Výměnou získali pohyblivost, rychlost a postupně i složitý nervový systém. Dnes jsou hlavonožci nejinteligentnějšími bezobratlými na Zemi.</p>
+
+        <div class="divider"></div>
+
+        <!-- NAUTILUS -->
+        <div class="species-tag">
+          <span class="species-cs" data-cs="Loděnka" data-en="Nautilus">Loděnka</span>
+          <span class="species-la">Nautilus sp.</span>
+        </div>
+        <div class="section-title" data-cs="ŽIVÁ FOSILIE" data-en="LIVING FOSSIL">ŽIVÁ FOSILIE</div>
+        <p class="section-text" data-cs="Loděnka je jediný žijící hlavonožec s vnější ulitou. Její tělo se za posledních 500 milionů let téměř nezměnilo — je to živá fosilie. Ulita je rozdělena na komůrky, které loděnka naplňuje plynem a reguluje tak vztlak. Žije v hloubkách Indického a Tichého oceánu." data-en="The nautilus is the only living cephalopod with an external shell. Its body has changed almost nothing in the last 500 million years — it is a living fossil. The shell is divided into chambers which the nautilus fills with gas to regulate its buoyancy. It lives in the depths of the Indian and Pacific Oceans.">Loděnka je jediný žijící hlavonožec s vnější ulitou. Její tělo se za posledních 500 milionů let téměř nezměnilo — je to živá fosilie. Ulita je rozdělena na komůrky, které loděnka naplňuje plynem a reguluje tak vztlak. Žije v hloubkách Indického a Tichého oceánu.</p>
+
+        <div class="inline-photo">
+          <img src="images/hlavonozci/hl1.jpg" alt="Loděnka" style="height: 420px;">
+          <div class="inline-photo-caption" data-cs="Loděnka — vnější ulita rozdělená na plynové komůrky" data-en="Nautilus — external shell divided into gas-filled chambers">Loděnka — vnější ulita rozdělená na plynové komůrky</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- SÉPIE -->
+        <div class="species-tag">
+          <span class="species-cs" data-cs="Sépie" data-en="Cuttlefish">Sépie</span>
+          <span class="species-la">Sepia officinalis</span>
+        </div>
+        <div class="section-title" data-cs="MISTR BARVOMĚNY" data-en="MASTER OF COLOUR">MISTR BARVOMĚNY</div>
+        <p class="section-text" data-cs="Sépie mají pod kůží zbytky vnitřní ulity — sépiovou kost. Jsou považovány za mistry barvoměny — jejich chromatofory jsou ještě komplexnější než u chobotnic. Dokážou vytvářet pohyblivé vlnové vzory přes celé tělo. Mozek sépie patří k největším v poměru k tělu ze všech bezobratlých." data-en="Cuttlefish have the remnants of an internal shell under their skin — the cuttlebone. They are considered masters of colour change — their chromatophores are even more complex than those of octopuses. They can produce travelling wave patterns across their entire body. The cuttlefish brain is among the largest relative to body size of all invertebrates.">Sépie mají pod kůží zbytky vnitřní ulity — sépiovou kost. Jsou považovány za mistry barvoměny — jejich chromatofory jsou ještě komplexnější než u chobotnic. Dokážou vytvářet pohyblivé vlnové vzory přes celé tělo. Mozek sépie patří k největším v poměru k tělu ze všech bezobratlých.</p>
+
+        <div class="inline-photo">
+          <img src="images/hlavonozci/hl2.webp" alt="Sépie obecná" style="height: 380px;">
+          <div class="inline-photo-caption" data-cs="Sépie obecná — barvoměna v akci" data-en="Common cuttlefish — colour change in action">Sépie obecná — barvoměna v akci</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- KRAKATICE -->
+        <div class="species-tag">
+          <span class="species-cs" data-cs="Krakatice" data-en="Squid">Krakatice</span>
+          <span class="species-la">Teuthida</span>
+        </div>
+        <div class="section-title" data-cs="RYCHLOST A SÍLA" data-en="SPEED AND POWER">RYCHLOST A SÍLA</div>
+        <p class="section-text" data-cs="Krakatice mají deset ramen — osm kratších a dvě dlouhá lovecká chapadla, která vystřelí s překvapivou přesností. Jsou nejrychlejšími hlavonožci a vytvářejí hejna. Největší druh — krakatice obrovská — dorůstá délky přes 13 metrů a je největším bezobratlým živočichem na Zemi." data-en="Squid have ten arms — eight shorter ones and two long hunting tentacles that shoot out with surprising accuracy. They are the fastest cephalopods and form schools. The largest species — the giant squid — grows to over 13 metres and is the largest invertebrate animal on Earth.">Krakatice mají deset ramen — osm kratších a dvě dlouhá lovecká chapadla, která vystřelí s překvapivou přesností. Jsou nejrychlejšími hlavonožci a vytvářejí hejna. Největší druh — krakatice obrovská — dorůstá délky přes 13 metrů a je největším bezobratlým živočichem na Zemi.</p>
+
+        <div class="inline-photo">
+          <img src="images/hlavonozci/hl3.jpg" alt="Krakatice" style="height: 320px;">
+          <div class="inline-photo-caption" data-cs="Krakatice — nejrychlejší hlavonožci" data-en="Squid — the fastest cephalopods">Krakatice — nejrychlejší hlavonožci</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- CO MAJÍ SPOLEČNÉHO -->
+        <div class="section-title" data-cs="CO MAJÍ SPOLEČNÉHO" data-en="WHAT THEY SHARE">CO MAJÍ SPOLEČNÉHO</div>
+        <p class="section-text" data-cs="Všichni hlavonožci mají zobák, sifon pro pohyb proudem vody, vynikající zrak a modrou krev s hemocyaninem. Jejich nervový systém je nejsložitější ze všech bezobratlých. Přesto většina z nich žije jen 1–3 roky — evoluce vsadila na rychlý intenzivní život místo dlouhověkosti." data-en="All cephalopods share a beak, a siphon for jet propulsion, exceptional eyesight and blue blood containing haemocyanin. Their nervous system is the most complex of all invertebrates. Yet most of them live just 1–3 years — evolution bet on a fast, intense life rather than longevity.">Všichni hlavonožci mají zobák, sifon pro pohyb proudem vody, vynikající zrak a modrou krev s hemocyaninem. Jejich nervový systém je nejsložitější ze všech bezobratlých. Přesto většina z nich žije jen 1–3 roky — evoluce vsadila na rychlý intenzivní život místo dlouhověkosti.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-left">ZOO Mořský svět · www.morskysvet.cz</span>
+    <span class="footer-right">© 2025 ZOO Mořský svět</span>
+  </footer>
+
+  <script>
+    let currentLang = 'cs';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+      document.querySelectorAll('[data-cs]').forEach(el => {
+        el.textContent = el.dataset[lang] || el.dataset.cs;
+      });
+    }
+
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    // Scroll
+    const col = document.getElementById('contentCol');
+    let isDragging = false, startY = 0, startScroll = 0;
+
+    col.addEventListener('mousedown', e => {
+      isDragging = true;
+      startY = e.clientY;
+      startScroll = col.scrollTop;
+      col.classList.add('grabbing');
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      col.scrollTop = startScroll - (e.clientY - startY);
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      col.classList.remove('grabbing');
+    });
+
+    col.addEventListener('wheel', e => {
+      col.scrollTop += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
+
+    col.addEventListener('touchstart', e => {
+      startY = e.touches[0].clientY;
+      startScroll = col.scrollTop;
+    }, { passive: true });
+    col.addEventListener('touchmove', e => {
+      col.scrollTop = startScroll - (e.touches[0].clientY - startY);
+    }, { passive: true });
+
+    // Ripple
+    document.addEventListener('click', function(e) {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    });
+
+    // Auto-reset
+    (function() {
+      var TIMEOUT = 180 * 1000;
+      var timer;
+      function reset() {
+        clearTimeout(timer);
+        timer = setTimeout(function() { window.location.href = 'index.html'; }, TIMEOUT);
+      }
+      ["mousemove","mousedown","touchstart","touchmove","keydown","scroll","click"].forEach(function(e) {
+        document.addEventListener(e, reset, { passive: true });
+      });
+      reset();
+    })();
+  </script>
+
+</body>
+</html>
