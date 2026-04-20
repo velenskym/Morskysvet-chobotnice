@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Chobotnice pobřežní — ZOO Mořský svět Praha</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #00A0E3;
+      --navy:   #004469;
+      --deeper: #00325a;
+      --orange: #EF7F1A;
+      --bg:     #001a2e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      transform-origin: top left;
+      transform: scale(0.7115);
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      position: fixed;
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: white;
+    }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── RIPPLE ── */
+    .ripple {
+      position: fixed;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(0,160,227,0.35);
+      transform: translate(-50%,-50%) scale(0);
+      animation: ripple 0.6s ease-out forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    @keyframes ripple {
+      to { transform: translate(-50%,-50%) scale(18); opacity: 0; }
+    }
+
+    /* ── HEADER ── */
+    .header {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      background: linear-gradient(to bottom, rgba(0,26,46,1) 0%, rgba(0,26,46,0.95) 100%);
+      border-bottom: 1px solid rgba(0,160,227,0.12);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo img {
+      height: 110px;
+      display: block;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lang-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 8px 20px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+    .lang-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 448px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex-shrink: 0;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-image {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, transparent 50%, var(--bg) 100%),
+        linear-gradient(to bottom, var(--bg) 0%, transparent 10%, transparent 88%, var(--bg) 100%),
+        linear-gradient(to left, transparent 96%, var(--bg) 100%);
+    }
+
+    .hero-content {
+      padding: 50px 80px 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-tag {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 78px;
+      font-weight: 700;
+      line-height: 1.0;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #a8d8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title-la {
+      font-size: 22px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 28px;
+    }
+
+    .hero-sub {
+      font-size: 23px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.65);
+      max-width: 560px;
+    }
+
+    /* ── CARDS ── */
+    .cards-row {
+      flex: 1;
+      padding: 22px 70px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 28px;
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+
+    .card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(0,160,227,0.12);
+      background: var(--navy);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,160,227,0.4);
+    }
+
+    .card:active {
+      transform: translateY(-1px) scale(0.99);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .card-image-wrap {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .card-image-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, var(--navy) 100%);
+    }
+
+    .card-body {
+      padding: 20px 28px 24px;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .card-desc {
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .card-arrow {
+      position: absolute;
+      bottom: 22px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0,160,227,0.15);
+      border: 1px solid rgba(0,160,227,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--blue);
+      transition: all 0.2s;
+    }
+
+    .card:hover .card-arrow {
+      background: var(--blue);
+      color: white;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .footer-left, .footer-right {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <img src="images/logo.png" alt="ZOO Mořský svět Praha">
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('cs')">CS</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-image">
+      <img src="images/index/index_hero.jpg" alt="Chobotnice pobřežní">
+    </div>
+    <div class="hero-content">
+      <div class="hero-tag" data-cs="MOŘSKÝ SVĚT PRAHA" data-en="PRAGUE SEA WORLD">MOŘSKÝ SVĚT PRAHA</div>
+      <div class="hero-title" data-cs="Chobotnice pobřežní" data-en="Common Octopus">Chobotnice pobřežní</div>
+      <div class="hero-title-la">Octopus vulgaris</div>
+      <div class="hero-sub" data-cs="Nejinteligentnější bezobratlec na planetě. Mistr převleků, smrtící lovec a záhada evoluce — vše v jednom těle." data-en="The most intelligent invertebrate on the planet. Master of disguise, deadly hunter and an evolutionary enigma — all in one body.">Nejinteligentnější bezobratlec na planetě. Mistr převleků, smrtící lovec a záhada evoluce — vše v jednom těle.</div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="cards-row">
+
+    <div class="card" onclick="navigate('druh')">
+      <div class="card-image-wrap">
+        <img class="card-image" src="images/index/karta_1.png" alt="Chobotnice pobřežní">
+      </div>
+      <div class="card-body">
+        <div class="card-tag" data-cs="DRUH" data-en="SPECIES">DRUH</div>
+        <div class="card-title" data-cs="Chobotnice pobřežní" data-en="Common Octopus">Chobotnice pobřežní</div>
+        <div class="card-desc" data-cs="Kdo to je, kde žije a proč je výjimečná." data-en="Who she is, where she lives and what makes her exceptional.">Kdo to je, kde žije a proč je výjimečná.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="card" onclick="navigate('superschopnosti')">
+      <div class="card-image-wrap">
+        <img class="card-image" src="images/index/karta_2.jpg" alt="Superschopnosti">
+      </div>
+      <div class="card-body">
+        <div class="card-tag" data-cs="SCHOPNOSTI" data-en="ABILITIES">SCHOPNOSTI</div>
+        <div class="card-title" data-cs="Superschopnosti" data-en="Superpowers">Superschopnosti</div>
+        <div class="card-desc" data-cs="Inteligence, barvoměna, mimikry a smrtící arzenál." data-en="Intelligence, colour change, mimicry and a deadly arsenal.">Inteligence, barvoměna, mimikry a smrtící arzenál.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="card" onclick="navigate('hlavonozci')">
+      <div class="card-image-wrap">
+        <img class="card-image" src="images/index/karta_3.jpg" alt="Hlavonožci">
+      </div>
+      <div class="card-body">
+        <div class="card-tag" data-cs="EVOLUCE" data-en="EVOLUTION">EVOLUCE</div>
+        <div class="card-title" data-cs="Hlavonožci" data-en="Cephalopods">Hlavonožci</div>
+        <div class="card-desc" data-cs="Měkkýši, kteří vyměnili ulitu za inteligenci." data-en="Molluscs that traded their shell for intelligence.">Měkkýši, kteří vyměnili ulitu za inteligenci.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-left">ZOO Mořský svět · www.morskysvet.cz</span>
+    <span class="footer-right">© 2025 ZOO Mořský svět</span>
+  </footer>
+
+  <script>
+    let currentLang = 'cs';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+      document.querySelectorAll('[data-cs]').forEach(el => {
+        el.textContent = el.dataset[lang] || el.dataset.cs;
+      });
+    }
+
+    function navigate(page) {
+      const pages = {
+        'druh': 'druh.html',
+        'superschopnosti': 'superschopnosti.html',
+        'hlavonozci': 'hlavonozci.html'
+      };
+      if (pages[page]) window.location.href = pages[page];
+    }
+
+    document.addEventListener('click', function(e) {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    });
+  </script>
+
+</body>
+</html>
