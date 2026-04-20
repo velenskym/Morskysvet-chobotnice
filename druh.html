@@ -477,13 +477,19 @@
       col.classList.remove('grabbing');
     });
 
+    col.addEventListener('wheel', e => {
+      col.scrollTop += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
+
     col.addEventListener('touchstart', e => {
       startY = e.touches[0].clientY;
       startScroll = col.scrollTop;
-    }, { passive: true });
+    }, { passive: false });
     col.addEventListener('touchmove', e => {
+      e.preventDefault();
       col.scrollTop = startScroll - (e.touches[0].clientY - startY);
-    }, { passive: true });
+    }, { passive: false });
 
     // Ripple
     document.addEventListener('click', function(e) {
