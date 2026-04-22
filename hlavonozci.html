@@ -263,6 +263,7 @@
       overflow: hidden;
       margin: 4px 0 28px;
       position: relative;
+      cursor: pointer;
     }
 
     .inline-photo img {
@@ -270,6 +271,11 @@
       object-fit: cover;
       object-position: center;
       display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .inline-photo:hover img {
+      transform: scale(1.02);
     }
 
     .inline-photo-caption {
@@ -281,6 +287,68 @@
       color: rgba(255,255,255,0.55);
       font-style: italic;
     }
+
+    .inline-photo-zoom {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 10px 20px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      pointer-events: none;
+    }
+
+    /* ── PHOTO FULLSCREEN OVERLAY ── */
+    .fs-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .fs-overlay.active { display: flex; }
+
+    .fs-overlay img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .fs-close-btn {
+      position: absolute;
+      bottom: 40px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 14px 28px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .fs-close-btn:hover { background: rgba(0,0,0,0.8); }
 
     /* ── SPECIES NAME TAG ── */
     .species-tag {
@@ -325,6 +393,12 @@
   </style>
 </head>
 <body>
+
+  <!-- PHOTO FULLSCREEN OVERLAY -->
+  <div class="fs-overlay" id="fsOverlay">
+    <img id="fsImg" src="" alt="" onclick="event.stopPropagation()">
+    <button class="fs-close-btn" onclick="closeFullscreen()">✕ <span data-cs="ZAVŘÍT" data-en="CLOSE">ZAVŘÍT</span></button>
+  </div>
 
   <!-- HEADER -->
   <header class="header">
@@ -386,9 +460,10 @@
         <div class="section-title" data-cs="ŽIVÁ FOSILIE" data-en="LIVING FOSSIL">ŽIVÁ FOSILIE</div>
         <p class="section-text" data-cs="Loděnka je jediný žijící hlavonožec s vnější ulitou. Její tělo se za posledních 500 milionů let téměř nezměnilo — je to živá fosilie. Ulita je rozdělena na komůrky, které loděnka naplňuje plynem a reguluje tak vztlak. Žije v hloubkách Indického a Tichého oceánu." data-en="The nautilus is the only living cephalopod with an external shell. Its body has changed almost nothing in the last 500 million years — it is a living fossil. The shell is divided into chambers which the nautilus fills with gas to regulate its buoyancy. It lives in the depths of the Indian and Pacific Oceans.">Loděnka je jediný žijící hlavonožec s vnější ulitou. Její tělo se za posledních 500 milionů let téměř nezměnilo — je to živá fosilie. Ulita je rozdělena na komůrky, které loděnka naplňuje plynem a reguluje tak vztlak. Žije v hloubkách Indického a Tichého oceánu.</p>
 
-        <div class="inline-photo">
+        <div class="inline-photo" onclick="openFullscreen('images/hlavonozci/hl1.jpg', event)">
           <img src="images/hlavonozci/hl1.jpg" alt="Loděnka" style="height: 420px;">
           <div class="inline-photo-caption" data-cs="Loděnka — vnější ulita rozdělená na plynové komůrky" data-en="Nautilus — external shell divided into gas-filled chambers">Loděnka — vnější ulita rozdělená na plynové komůrky</div>
+          <div class="inline-photo-zoom">⛶ <span data-cs="CELÁ OBRAZOVKA" data-en="FULL SCREEN">CELÁ OBRAZOVKA</span></div>
         </div>
 
         <div class="divider"></div>
@@ -401,9 +476,10 @@
         <div class="section-title" data-cs="MISTR BARVOMĚNY" data-en="MASTER OF COLOUR">MISTR BARVOMĚNY</div>
         <p class="section-text" data-cs="Sépie mají pod kůží zbytky vnitřní ulity — sépiovou kost. Jsou považovány za mistry barvoměny — jejich chromatofory jsou ještě komplexnější než u chobotnic. Dokážou vytvářet pohyblivé vlnové vzory přes celé tělo. Mozek sépie patří k největším v poměru k tělu ze všech bezobratlých." data-en="Cuttlefish have the remnants of an internal shell under their skin — the cuttlebone. They are considered masters of colour change — their chromatophores are even more complex than those of octopuses. They can produce travelling wave patterns across their entire body. The cuttlefish brain is among the largest relative to body size of all invertebrates.">Sépie mají pod kůží zbytky vnitřní ulity — sépiovou kost. Jsou považovány za mistry barvoměny — jejich chromatofory jsou ještě komplexnější než u chobotnic. Dokážou vytvářet pohyblivé vlnové vzory přes celé tělo. Mozek sépie patří k největším v poměru k tělu ze všech bezobratlých.</p>
 
-        <div class="inline-photo">
+        <div class="inline-photo" onclick="openFullscreen('images/hlavonozci/hl2.webp', event)">
           <img src="images/hlavonozci/hl2.webp" alt="Sépie obecná" style="height: 380px;">
           <div class="inline-photo-caption" data-cs="Sépie obecná — barvoměna v akci" data-en="Common cuttlefish — colour change in action">Sépie obecná — barvoměna v akci</div>
+          <div class="inline-photo-zoom">⛶ <span data-cs="CELÁ OBRAZOVKA" data-en="FULL SCREEN">CELÁ OBRAZOVKA</span></div>
         </div>
 
         <div class="divider"></div>
@@ -416,9 +492,10 @@
         <div class="section-title" data-cs="RYCHLOST A SÍLA" data-en="SPEED AND POWER">RYCHLOST A SÍLA</div>
         <p class="section-text" data-cs="Krakatice mají deset ramen — osm kratších a dvě dlouhá lovecká chapadla, která vystřelí s překvapivou přesností. Jsou nejrychlejšími hlavonožci a vytvářejí hejna. Největší druh — krakatice obrovská — dorůstá délky přes 13 metrů a je největším bezobratlým živočichem na Zemi." data-en="Squid have ten arms — eight shorter ones and two long hunting tentacles that shoot out with surprising accuracy. They are the fastest cephalopods and form schools. The largest species — the giant squid — grows to over 13 metres and is the largest invertebrate animal on Earth.">Krakatice mají deset ramen — osm kratších a dvě dlouhá lovecká chapadla, která vystřelí s překvapivou přesností. Jsou nejrychlejšími hlavonožci a vytvářejí hejna. Největší druh — krakatice obrovská — dorůstá délky přes 13 metrů a je největším bezobratlým živočichem na Zemi.</p>
 
-        <div class="inline-photo">
+        <div class="inline-photo" onclick="openFullscreen('images/hlavonozci/hl3.jpg', event)">
           <img src="images/hlavonozci/hl3.jpg" alt="Krakatice" style="height: 320px;">
           <div class="inline-photo-caption" data-cs="Krakatice — nejrychlejší hlavonožci" data-en="Squid — the fastest cephalopods">Krakatice — nejrychlejší hlavonožci</div>
+          <div class="inline-photo-zoom">⛶ <span data-cs="CELÁ OBRAZOVKA" data-en="FULL SCREEN">CELÁ OBRAZOVKA</span></div>
         </div>
 
         <div class="divider"></div>
@@ -455,11 +532,26 @@
       window.location.href = 'index.html';
     }
 
+    function openFullscreen(src, event) {
+      if (event) event.stopPropagation();
+      const overlay = document.getElementById('fsOverlay');
+      const fsImg = document.getElementById('fsImg');
+      fsImg.src = src;
+      overlay.classList.add('active');
+    }
+
+    function closeFullscreen() {
+      const overlay = document.getElementById('fsOverlay');
+      overlay.classList.remove('active');
+      document.getElementById('fsImg').src = '';
+    }
+
     // Scroll
     const col = document.getElementById('contentCol');
     let isDragging = false, startY = 0, startScroll = 0;
 
     col.addEventListener('mousedown', e => {
+      if (e.target.closest('.inline-photo')) return;
       isDragging = true;
       startY = e.clientY;
       startScroll = col.scrollTop;
@@ -490,6 +582,7 @@
 
     // Ripple
     document.addEventListener('click', function(e) {
+      if (document.getElementById('fsOverlay').classList.contains('active')) return;
       const r = document.createElement('div');
       r.className = 'ripple';
       r.style.left = e.clientX + 'px';
