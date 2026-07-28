@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=1920">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Chobotnice pobřežní — ZOO Mořský svět Praha</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
@@ -18,15 +18,8 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html {
-      transform-origin: top left;
-      transform: scale(0.7115);
-      width: 1920px;
-      height: 1080px;
+      zoom: 0.7115; /* 1366/1920 - Chromium-only kiosk, sladěno s tabletem medúzy */
       overflow: hidden;
-      position: fixed;
-      background: var(--bg);
-      font-family: 'DM Sans', sans-serif;
-      color: white;
     }
 
     body {
@@ -34,6 +27,8 @@
       height: 1080px;
       overflow: hidden;
       background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: white;
       display: flex;
       flex-direction: column;
     }
@@ -53,77 +48,60 @@
       to { transform: translate(-50%,-50%) scale(18); opacity: 0; }
     }
 
-    /* ── HEADER ── */
-    .header {
-      height: 130px;
+    /* ── TOPBAR (překryv nad foto i obsahem, sladěno s tabletem medúzy) ── */
+    .topbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 96px;
+      z-index: 50;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 70px;
-      background: var(--navy);
-      border-bottom: 1px solid rgba(0,160,227,0.12);
-      flex-shrink: 0;
-      z-index: 10;
+      align-items: stretch;
+      justify-content: flex-end;
+      background: linear-gradient(to bottom, rgba(0,10,20,0.55), transparent);
+      pointer-events: none;
     }
 
-    .header-left {
+    .back-home {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 114px;
       display: flex;
       align-items: center;
-      gap: 32px;
-    }
-
-    .logo img {
-      height: 110px;
-      display: block;
-    }
-
-    .back-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.7);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 500;
-      padding: 10px 24px;
-      border-radius: 24px;
+      justify-content: center;
+      background: rgba(0,50,90,0.4);
+      border-right: 1px solid rgba(255,255,255,0.1);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.2s;
+      pointer-events: auto;
     }
-    .back-btn:hover {
-      background: rgba(255,255,255,0.12);
-      color: white;
-    }
+    .back-home:hover { background: var(--blue); }
+    .back-home .back-arrow { font-size: 34px; color: #fff; line-height: 1; }
 
     .lang-switch {
+      align-self: center;
+      margin: 0 56px;
+      pointer-events: auto;
       display: flex;
-      gap: 6px;
+      gap: 4px;
+      background: rgba(0,25,46,0.55);
+      border-radius: 11px;
+      padding: 5px;
     }
 
     .lang-btn {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.5);
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.45);
       font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.1em;
-      padding: 8px 20px;
-      border-radius: 24px;
+      letter-spacing: 0.05em;
+      padding: 9px 18px;
+      border-radius: 7px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .lang-btn.active {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: white;
-    }
-    .lang-btn:hover:not(.active) {
-      background: rgba(255,255,255,0.1);
-      color: white;
-    }
+    .lang-btn.active { background: var(--blue); color: white; }
 
     /* ── MAIN LAYOUT ── */
     .main {
@@ -343,26 +321,23 @@
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-left">
-      <div class="logo">
-        <img src="images/logo.png" alt="ZOO Mořský svět Praha">
-      </div>
-      <button class="back-btn" onclick="goHome()">← <span data-cs="Zpět" data-en="Back">Zpět</span></button>
+  <!-- TOPBAR (překryv) -->
+  <div class="topbar">
+    <div class="back-home" onclick="goHome()" role="button" aria-label="Zpět na úvod / Back to home">
+      <span class="back-arrow">&#8592;</span>
     </div>
     <div class="lang-switch">
       <button class="lang-btn active" onclick="setLang('cs')">CS</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
-  </header>
+  </div>
 
   <!-- MAIN -->
   <div class="main">
 
     <!-- LEVÝ SLOUPEC — foto -->
     <div class="hero-col">
-      <img src="images/druh/Druh_hero.png" alt="Chobotnice pobřežní">
+      <img src="images/druh/Druh_hero.webp" alt="Chobotnice pobřežní">
     </div>
 
     <!-- PRAVÝ SLOUPEC — obsah -->
@@ -441,6 +416,7 @@
 
     function setLang(lang) {
       currentLang = lang;
+      localStorage.setItem('t4-lang', lang);
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
       });
@@ -448,6 +424,7 @@
         el.textContent = el.dataset[lang] || el.dataset.cs;
       });
     }
+    if (localStorage.getItem('t4-lang') === 'en') setLang('en');
 
     function goHome() {
       window.location.href = 'index.html';
@@ -472,19 +449,10 @@
       col.classList.remove('grabbing');
     });
 
-    col.addEventListener('wheel', e => {
-      col.scrollTop += e.deltaY;
-      e.preventDefault();
-    }, { passive: false });
-
-    col.addEventListener('touchstart', e => {
-      startY = e.touches[0].clientY;
-      startScroll = col.scrollTop;
-    }, { passive: false });
-    col.addEventListener('touchmove', e => {
-      e.preventDefault();
-      col.scrollTop = startScroll - (e.touches[0].clientY - startY);
-    }, { passive: false });
+    // Wheel a touch scroll necháváme na nativním chování prohlížeče
+    // (overflow-y: auto) — žádný JS scrollTop hack, žádný souboj
+    // s nativním momentum scrollem. Drag myší (výše) zůstává jako
+    // bonus pro ovládání bez dotykové obrazovky.
 
     // Ripple
     document.addEventListener('click', function(e) {
