@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=1920">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Chobotnice pobřežní — ZOO Mořský svět Praha</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
@@ -18,15 +18,8 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html {
-      transform-origin: top left;
-      transform: scale(0.7115);
-      width: 1920px;
-      height: 1080px;
+      zoom: 0.7115; /* 1366/1920 - Chromium-only kiosk, sladěno s tabletem medúzy */
       overflow: hidden;
-      position: fixed;
-      background: var(--bg);
-      font-family: 'DM Sans', sans-serif;
-      color: white;
     }
 
     body {
@@ -34,6 +27,8 @@
       height: 1080px;
       overflow: hidden;
       background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: white;
       display: flex;
       flex-direction: column;
     }
@@ -385,6 +380,7 @@
 
     function setLang(lang) {
       currentLang = lang;
+      localStorage.setItem('t4-lang', lang);
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
       });
@@ -392,6 +388,7 @@
         el.textContent = el.dataset[lang] || el.dataset.cs;
       });
     }
+    if (localStorage.getItem('t4-lang') === 'en') setLang('en');
 
     function navigate(page) {
       const pages = {
